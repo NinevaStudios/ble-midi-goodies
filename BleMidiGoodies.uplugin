@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "BleMidiGoodies",
+	"Description": "BLE MIDI client for Android",
+	"Category": "Other",
+	"CreatedBy": "Nineva Studios",
+	"CreatedByURL": "https://ninevastudios.com/",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "BleMidiGoodies",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
