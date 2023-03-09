@@ -1,6 +1,13 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+using System.IO;
 using UnrealBuildTool;
+
+#if UE_5_0_OR_LATER
+using EpicGames.Core;
+#else
+using Tools.DotNETCommon;
+#endif
 
 public class BleMidiGoodies : ModuleRules
 {
@@ -49,5 +56,13 @@ public class BleMidiGoodies : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
+
+		if (Target.Platform == UnrealTargetPlatform.Android)
+		{
+			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Android"));
+			PrivateDependencyModuleNames.AddRange(new[] {"Launch"});
+			var PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
+			AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "BleMidi_Android_UPL.xml"));
+		}
 	}
 }
