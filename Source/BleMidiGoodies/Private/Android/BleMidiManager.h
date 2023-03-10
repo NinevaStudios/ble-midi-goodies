@@ -15,39 +15,39 @@ class UBleMidiManager : public UObject
 	GENERATED_BODY()
 public:
 	
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	bool Initialize(FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
 			  FOnDeviceInputDelegate& OnDeviceInputDelegate,
 			  FOnDeviceOutputDelegate& OnDeviceOutputDelegate);
 	
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	bool IsBleSupported();
 	
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	bool IsBleEnabled();
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void SetBluetoothState(bool IsEnabled);
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void SetRequestPairing(bool NeedPairing);
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void StartScan(int TimeoutInMilliSeconds);
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void StopScan();
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void DisconnectInputDevice(UBleMidiInputDevice* MidiInputDevice);
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	void DisconnectOutputDevice(UBleMidiOutputDevice* MidiOutputDevice);
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	TArray<UBleMidiInputDevice*> GetMidiInputDevices();
 
-	UFUNCTION(BlueprintCallable, Category = "Firebase Goodies|Cloud Functions")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	TArray<UBleMidiOutputDevice*> GetMidiOutputDevices();
 
 private:

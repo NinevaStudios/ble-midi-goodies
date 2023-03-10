@@ -18,4 +18,5 @@ namespace BleMidiMethodCallUtils
 	jobject CallObjectMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...);
 	TArray<UBleMidiInputDevice*> ConvertToInputArray(jobjectArray javaObjectArray);
 	TArray<UBleMidiOutputDevice*> ConvertToOutputArray(jobjectArray javaObjectArray);
+	jintArray ConvertToJIntArray(const TArray<int>& intArray);
 };

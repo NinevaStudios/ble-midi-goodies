@@ -11,6 +11,14 @@ class UBleMidiOutputDevice : public UObject
 public:
 	UBleMidiOutputDevice();
 
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	FString GetName();
+
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	FString GetAddress();
+
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	void SendMessage(int Type, TArray<int> Data);
 
 #if PLATFORM_ANDROID
 	void Init(jobject Object);

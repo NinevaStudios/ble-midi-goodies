@@ -113,5 +113,24 @@ namespace BleMidiMethodCallUtils
 		}
 		return objectArray;
 	}
+	jintArray ConvertToJIntArray(const TArray<int>& intArray)
+	{
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		jintArray javaIntArray = (jintArray)Env->NewIntArray(intArray.Num());
+
+		jint* javaIntArrayPtr = (jint*)malloc(intArray.Num() * sizeof(jint));
+
+		for (int i = 0; i < intArray.Num(); i++)
+		{
+			javaIntArrayPtr[i] = (jint)intArray[i];
+		}
+
+		Env->SetIntArrayRegion(javaIntArray, 0, intArray.Num(), javaIntArrayPtr);
+
+		free(javaIntArrayPtr);
+
+		return javaIntArray;
+	}
 }
 
