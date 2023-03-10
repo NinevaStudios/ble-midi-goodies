@@ -21,7 +21,8 @@ import jp.kshoji.blemidi.listener.OnMidiScanStatusListener;
 @Keep
 public class BleMidiManager {
 
-	public static native void OnDeviceEvent(Object device, boolean isInput);
+	public static native void OnInputDeviceEvent(InputDevice device);
+	public static native void OnOutputDeviceEvent(OutputDevice device);
 	public static native void OnMidiScanStatusChanged(boolean status);
 	private BleMidiCentralProvider bleMidiCentralProvider;
 	private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -52,12 +53,12 @@ public class BleMidiManager {
 		deviceAttachedListener = new OnMidiDeviceAttachedListener() {
 			@Override
 			public void onMidiInputDeviceAttached(@NonNull MidiInputDevice midiInputDevice) {
-				OnDeviceEvent(new InputDevice(midiInputDevice), true);
+				OnInputDeviceEvent(new InputDevice(midiInputDevice));
 			}
 
 			@Override
 			public void onMidiOutputDeviceAttached(@NonNull MidiOutputDevice midiOutputDevice) {
-				OnDeviceEvent(new OutputDevice(midiOutputDevice), false);
+				OnOutputDeviceEvent(new OutputDevice(midiOutputDevice));
 			}
 		};
 
@@ -66,12 +67,12 @@ public class BleMidiManager {
 		deviceDetachedListener = new OnMidiDeviceDetachedListener() {
 			@Override
 			public void onMidiInputDeviceDetached(@NonNull MidiInputDevice midiInputDevice) {
-				OnDeviceEvent(new InputDevice(midiInputDevice), true);
+				OnInputDeviceEvent(new InputDevice(midiInputDevice));
 			}
 
 			@Override
 			public void onMidiOutputDeviceDetached(@NonNull MidiOutputDevice midiOutputDevice) {
-				OnDeviceEvent(new OutputDevice(midiOutputDevice), false);
+				OnOutputDeviceEvent(new OutputDevice(midiOutputDevice));
 			}
 		};
 
@@ -144,31 +145,31 @@ public class BleMidiManager {
 	}
 
 	@Keep
-	public List<InputDevice> getMidiInputDevices() {
-		List<InputDevice> result = new ArrayList<>();
+	public InputDevice[] getMidiInputDevices() {
+		ArrayList<InputDevice> result = new ArrayList<>();
 
 		if (!isInitialized)
-			return result;
+			return result.toArray(new InputDevice[0]);
 
 		for (MidiInputDevice device : bleMidiCentralProvider.getMidiInputDevices()) {
 			result.add(new InputDevice(device));
 		}
 
-		return result;
+		return result.toArray(new InputDevice[0]);
 	}
 
 	@Keep
-	public List<OutputDevice> getMidiOutputDevices() {
-		List<OutputDevice> result = new ArrayList<>();
+	public OutputDevice[] getMidiOutputDevices() {
+		ArrayList<OutputDevice> result = new ArrayList<>();
 
 		if (!isInitialized)
-			return result;
+			return result.toArray(new OutputDevice[0]);
 
 		for (MidiOutputDevice device : bleMidiCentralProvider.getMidiOutputDevices()) {
 			result.add(new OutputDevice(device));
 		}
 
-		return result;
+		return result.toArray(new OutputDevice[0]);
 	}
 
 	protected void finalize() {
