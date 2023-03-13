@@ -5,25 +5,6 @@
 
 namespace BleMidiMethodCallUtils
 {
-	bool CallStaticBoolMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-	{
-		bool bIsOptional = false;
-
-		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
-
-		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
-
-		va_list Args;
-		va_start(Args, MethodSignature);
-		bool Result = Env->CallStaticBooleanMethodV(Class, Method, Args);
-		va_end(Args);
-
-		Env->DeleteLocalRef(Class);
-
-		return Result;
-	}
 	bool CallBoolMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
 	{
 		bool bIsOptional = false;
@@ -43,6 +24,7 @@ namespace BleMidiMethodCallUtils
 
 		return Result;
 	}
+
 	void CallVoidMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
 	{
 		bool bIsOptional = false;
@@ -113,6 +95,7 @@ namespace BleMidiMethodCallUtils
 		}
 		return objectArray;
 	}
+
 	jintArray ConvertToJIntArray(const TArray<int>& intArray)
 	{
 		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
@@ -134,3 +117,34 @@ namespace BleMidiMethodCallUtils
 	}
 }
 
+void CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+{
+	bool bIsOptional = false;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+
+	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+
+	va_list Args;
+	va_start(Args, MethodSignature);
+	Env->CallStaticVoidMethodV(Class, Method, Args);
+	va_end(Args);
+
+	Env->DeleteLocalRef(Class);
+}
+
+jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray)
+{
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	jobjectArray javaStringArray = (jobjectArray)Env->NewObjectArray(stringArray.Num(), FJavaWrapper::JavaStringClass, nullptr);
+
+	for (int i = 0; i < stringArray.Num(); i++)
+	{
+		Env->SetObjectArrayElement(javaStringArray, i, *FJavaClassObject::GetJString(stringArray[i]));
+	}
+
+	return javaStringArray;
+}

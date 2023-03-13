@@ -2,6 +2,10 @@
 
 #include "BleMidiInputDevice.h"
 
+#if PLATFORM_ANDROID
+#include "Android/Utils/BleMidiMethodCallUtils.h"
+#endif
+
 const ANSICHAR* BleMidiInputDeviceClassName = "com/ninevastudios/blemidilib/InputDevice";
 
 UBleMidiInputDevice::~UBleMidiInputDevice()

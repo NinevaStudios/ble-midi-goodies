@@ -2,6 +2,10 @@
 
 #include "BleMidiOutputDevice.h"
 
+#if PLATFORM_ANDROID
+#include "Android/Utils/BleMidiMethodCallUtils.h"
+#endif
+
 const ANSICHAR* BleMidiOutputDeviceClassName = "com/ninevastudios/blemidilib/OutputDevice";
 
 FString UBleMidiOutputDevice::GetName()

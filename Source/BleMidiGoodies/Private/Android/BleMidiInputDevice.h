@@ -15,13 +15,13 @@ class UBleMidiInputDevice : public UObject
 public:
 	~UBleMidiInputDevice();
 	
-	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Input Device")
 	FString GetName();
 
-	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Input Device")
 	FString GetAddress();
 
-	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Input Device")
 	void BindOnMessageReceivedCallback(const FOnMessageReceivedDelegate& Delegate);
 
 #if PLATFORM_ANDROID

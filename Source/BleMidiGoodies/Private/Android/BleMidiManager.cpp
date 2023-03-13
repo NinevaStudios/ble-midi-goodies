@@ -4,9 +4,9 @@
 
 #include "Callbacks/BleMidiManagerCallback.h"
 
-#include "Android/AndroidApplication.h"
-#include "Android/AndroidJNI.h"
-#include "Android/AndroidJava.h"
+#if PLATFORM_ANDROID
+#include "Android/Utils/BleMidiMethodCallUtils.h"
+#endif
 
 const ANSICHAR* BleMidiManagerClassName = "com/ninevastudios/blemidilib/BleMidiManager";
 

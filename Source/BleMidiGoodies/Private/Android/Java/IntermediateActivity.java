@@ -37,15 +37,12 @@ public class IntermediateActivity extends Activity {
 			return;
 		}
 
-		for (int result : grantResults) {
-			if (result == PackageManager.PERMISSION_DENIED) {
-				Utils.OnPermissionGrantResult(false);
-				finish();
-				return;
-			}
+		boolean[] granted = new boolean[grantResults.length];
+		for (int i = 0; i < grantResults.length; i++) {
+			granted[i] = grantResults[i] == PackageManager.PERMISSION_GRANTED;
 		}
 
-		Utils.OnPermissionGrantResult(true);
+		Utils.OnPermissionGrantResult(permissions, granted);
 		finish();
 	}
 }

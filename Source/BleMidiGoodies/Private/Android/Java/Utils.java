@@ -12,9 +12,10 @@ import androidx.annotation.Keep;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Utils {
-	public static native void OnPermissionGrantResult(boolean granted);
+	public static native void OnPermissionGrantResult(String[] permissions, boolean[] granted);
 
 	@Keep
 	public static void requestBluetoothPermissions(Activity context) {
@@ -33,18 +34,8 @@ public class Utils {
 
 	@Keep
 	public static void requestPermissions(Activity context, String[] permissions) {
-
 		ArrayList<String> permissionsList = new ArrayList<>();
-		for (String permission : permissions) {
-			if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-				permissionsList.add(permission);
-			}
-		}
-
-		if (permissionsList.isEmpty()) {
-			OnPermissionGrantResult(true);
-			return;
-		}
+		Collections.addAll(permissionsList, permissions);
 
 		Intent intent = new Intent(context, IntermediateActivity.class)
 				.putExtra(IntermediateActivity.EXTRA_PERMISSIONS, permissionsList);
@@ -52,7 +43,7 @@ public class Utils {
 			context.startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
-			OnPermissionGrantResult(false);
+			OnPermissionGrantResult(permissions, new boolean[permissions.length]);
 		}
 	}
 

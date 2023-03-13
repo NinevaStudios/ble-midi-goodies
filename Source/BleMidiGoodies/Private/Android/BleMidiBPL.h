@@ -13,7 +13,18 @@ GENERATED_BODY()
 	
 public:
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
 	static UBleMidiManager* CreateMidiManager();
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
+	static void RequestBluetoothPermissions();
+
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
+	static void RequestPermissions(const TArray<FString>& Permissions);
+
+	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
+	static void OpenApplicationSettings();
+
+private:
+	static const ANSICHAR* UtilsClassName;
 };
