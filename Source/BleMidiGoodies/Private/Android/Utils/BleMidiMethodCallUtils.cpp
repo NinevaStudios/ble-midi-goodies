@@ -187,7 +187,7 @@ TArray<FString> ConvertToStringArray(jobjectArray javaStringArray)
 	return stringArray;
 }
 
-TArray<bool> ConvertToBoolArray(jobjectArray javaBooleanArray)
+TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray)
 {
 	TArray<bool> boolArray;
 

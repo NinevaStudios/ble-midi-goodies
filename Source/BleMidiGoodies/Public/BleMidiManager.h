@@ -3,11 +3,16 @@
 #pragma once
 #include "BleMidiInputDevice.h"
 #include "BleMidiOutputDevice.h"
-#include "Callbacks/BleMidiManagerCallback.h"
 #include "BleMidiManager.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceInputDelegate, UBleMidiInputDevice*, Device);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceOutputDelegate, UBleMidiOutputDevice*, Device);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnMidiScanStatusChangedDelegate, bool, Status);
+
+class UBleMidiManagerCallback;
+
 UCLASS()
-class UBleMidiManager : public UObject
+class BLEMIDIGOODIES_API UBleMidiManager : public UObject
 {
 	GENERATED_BODY()
 public:
@@ -15,9 +20,9 @@ public:
 	~UBleMidiManager();
 	
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
-	bool Initialize(FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
-			  FOnDeviceInputDelegate& OnDeviceInputDelegate,
-			  FOnDeviceOutputDelegate& OnDeviceOutputDelegate);
+	bool Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
+		const FOnDeviceInputDelegate& OnDeviceInputDelegate,
+		const FOnDeviceOutputDelegate& OnDeviceOutputDelegate);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	bool IsBleSupported();

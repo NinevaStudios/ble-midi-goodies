@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2023 Nineva Studios
 
 #include "BleMidiInputDevice.h"
+#include "Callbacks/BleMidiInputDeviceCallback.h"
 
 #if PLATFORM_ANDROID
 #include "Android/Utils/BleMidiMethodCallUtils.h"

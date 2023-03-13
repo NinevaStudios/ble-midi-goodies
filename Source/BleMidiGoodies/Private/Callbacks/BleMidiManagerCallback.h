@@ -1,20 +1,15 @@
 ﻿// Copyright (c) 2023 Nineva Studios
 
 #pragma once
-#include "Android/BleMidiManager.h"
+
+#include "BleMidiManager.h"
 
 #include "BleMidiManagerCallback.generated.h"
-
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceInputDelegate, UBleMidiInputDevice*, Device);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceOutputDelegate, UBleMidiOutputDevice*, Device);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnMidiScanStatusChangedDelegate, bool, Status);
-
-class UBleMidiInputDevice;
-class UBleMidiOutputDevice;
 
 UCLASS()
 class UBleMidiManagerCallback : public UObject
 {
+	GENERATED_BODY()
 public:
 
 	void BindOnInputDeviceDelegate(const FOnDeviceInputDelegate& Delegate);
@@ -25,11 +20,8 @@ public:
 	void ExecuteOnOutputDevice(UBleMidiOutputDevice* OutputDevice);
 	void ExecuteOnScanStatusChanged(bool Status);
 
-private:
-	UPROPERTY()
+private:	
 	FOnDeviceInputDelegate OnDeviceInputDelegate;
-	UPROPERTY()
 	FOnDeviceOutputDelegate OnDeviceOutputDelegate;
-	UPROPERTY()
 	FOnMidiScanStatusChangedDelegate OnMidiScanStatusChangedDelegate;
 };

@@ -5,7 +5,7 @@
 #include "BleMidiOutputDevice.generated.h"
 
 UCLASS()
-class UBleMidiOutputDevice : public UObject
+class BLEMIDIGOODIES_API UBleMidiOutputDevice : public UObject
 {
 	GENERATED_BODY()
 public:

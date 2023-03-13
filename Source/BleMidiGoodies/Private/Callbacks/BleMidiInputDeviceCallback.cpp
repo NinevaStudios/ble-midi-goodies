@@ -6,7 +6,7 @@ void UBleMidiInputDeviceCallback::BindOnMessageReceivedDelegate(const FOnMessage
 	OnMessageReceivedDelegate = Delegate;
 }
 
-void UBleMidiInputDeviceCallback::ExecuteOnMessageReceived(EMidiMessageType Type, TArray<int> Data)
+void UBleMidiInputDeviceCallback::ExecuteOnMessageReceived(EMidiMessageType Type, const TArray<int>& Data)
 {
 	AsyncTask(ENamedThreads::GameThread, [=]() {
 		OnMessageReceivedDelegate.ExecuteIfBound(Type, Data);

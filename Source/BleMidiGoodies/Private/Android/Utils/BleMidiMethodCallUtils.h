@@ -20,5 +20,5 @@ namespace BleMidiMethodCallUtils
 	jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray);
 	TArray<int> ConvertToIntArray(jintArray javaArray);
 	TArray<FString> ConvertToStringArray(jobjectArray javaStringArray);
-	TArray<bool> ConvertToBoolArray(jobjectArray javaBooleanArray);
+	TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray);
 };

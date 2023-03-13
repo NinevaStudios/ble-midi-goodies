@@ -2,14 +2,15 @@
 
 #include "BleMidiBPL.h"
 #include "BleMidiManager.h"
-#include "Android/AndroidPlatform.h"
 #include "Async/Async.h"
 
 #if PLATFORM_ANDROID
+#include "Android/AndroidPlatform.h"
 #include "Android/Utils/BleMidiMethodCallUtils.h"
 #endif
 
-const ANSICHAR* UtilsClassName = "com/ninevastudios/blemidilib/Utils";
+const ANSICHAR* UBleMidiBPL::UtilsClassName = "com/ninevastudios/blemidilib/Utils";
+FOnPermissionGrantResultDelegate UBleMidiBPL::OnPermissionGrantResultDelegate;
 
 UBleMidiManager* UBleMidiBPL::CreateMidiManager()
 {
@@ -41,7 +42,7 @@ void UBleMidiBPL::OpenApplicationSettings()
 #endif
 }
 
-void UBleMidiBPL::ExecutePermissionResultDelegate(TArray<FString>& Permissions, TArray<bool> Granted)
+void UBleMidiBPL::ExecutePermissionResultDelegate(const TArray<FString>& Permissions, const TArray<bool>& Granted)
 {
 	if (OnPermissionGrantResultDelegate.IsBound())
 	{
@@ -49,15 +50,14 @@ void UBleMidiBPL::ExecutePermissionResultDelegate(TArray<FString>& Permissions, 
 			OnPermissionGrantResultDelegate.ExecuteIfBound(Permissions, Granted);
 		});
 	}
-
 }
 
 #if PLATFORM_ANDROID
 
-JNI_METHOD void Java_com_ninevastudios_blemidilib_Utils_OnPermissionGrantResult(JNIEnv* env, jclass clazz, jobjectArray permissions, jobjectArray granted)
+JNI_METHOD void Java_com_ninevastudios_blemidilib_Utils_OnPermissionGrantResult(JNIEnv* env, jclass clazz, jobjectArray permissions, jbooleanArray granted)
 {
 	UBleMidiBPL::ExecutePermissionResultDelegate(BleMidiMethodCallUtils::ConvertToStringArray(permissions),
-		BleMidiMethodCallUtils::ConvertToBoolArray());
+		BleMidiMethodCallUtils::ConvertToBoolArray(granted));
 }
 
 #endif

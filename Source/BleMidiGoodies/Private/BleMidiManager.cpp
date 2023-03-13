@@ -18,8 +18,8 @@ UBleMidiManager::~UBleMidiManager()
 	}
 }
 
-bool UBleMidiManager::Initialize(FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
-                                 FOnDeviceInputDelegate& OnDeviceInputDelegate, FOnDeviceOutputDelegate& OnDeviceOutputDelegate)
+bool UBleMidiManager::Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
+	const FOnDeviceInputDelegate& OnDeviceInputDelegate, const FOnDeviceOutputDelegate& OnDeviceOutputDelegate)
 {
 	NativeCallback = NewObject<UBleMidiManagerCallback>();
 	NativeCallback->BindOnInputDeviceDelegate(OnDeviceInputDelegate);
@@ -42,7 +42,7 @@ bool UBleMidiManager::IsBleSupported()
 	bIsBleSupported = BleMidiMethodCallUtils::CallBoolMethod(BleMidiManagerClassName, "isBleSupported",
 		"(Landroid/app/Activity;)Z", FJavaWrapper::GameActivityThis);
 #endif
-	return IsBleSupported;
+	return bIsBleSupported;
 }
 
 bool UBleMidiManager::IsBleEnabled()
