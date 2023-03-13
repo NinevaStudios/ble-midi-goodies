@@ -21,9 +21,9 @@ import jp.kshoji.blemidi.listener.OnMidiScanStatusListener;
 @Keep
 public class BleMidiManager {
 
-	public static native void OnInputDeviceEvent(InputDevice device);
-	public static native void OnOutputDeviceEvent(OutputDevice device);
-	public static native void OnMidiScanStatusChanged(boolean status);
+	public static native void OnInputDeviceEvent(long callbackAdr, InputDevice device);
+	public static native void OnOutputDeviceEvent(long callbackAdr, OutputDevice device);
+	public static native void OnMidiScanStatusChanged(long callbackAdr, boolean status);
 	private BleMidiCentralProvider bleMidiCentralProvider;
 	private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	private OnMidiScanStatusListener scanStatusListener;
@@ -34,7 +34,7 @@ public class BleMidiManager {
 	}
 
 	@Keep
-	public boolean initialize(Activity context) {
+	public boolean initialize(Activity context, final long callbackAdr) {
 		if (!isBleSupported(context) || !isBluetoothEnabled())
 			return false;
 
@@ -44,7 +44,7 @@ public class BleMidiManager {
 		scanStatusListener = new OnMidiScanStatusListener() {
 			@Override
 			public void onMidiScanStatusChanged(boolean status) {
-				OnMidiScanStatusChanged(status);
+				OnMidiScanStatusChanged(callbackAdr, status);
 			}
 		};
 
@@ -53,12 +53,12 @@ public class BleMidiManager {
 		deviceAttachedListener = new OnMidiDeviceAttachedListener() {
 			@Override
 			public void onMidiInputDeviceAttached(@NonNull MidiInputDevice midiInputDevice) {
-				OnInputDeviceEvent(new InputDevice(midiInputDevice));
+				OnInputDeviceEvent(callbackAdr, new InputDevice(midiInputDevice));
 			}
 
 			@Override
 			public void onMidiOutputDeviceAttached(@NonNull MidiOutputDevice midiOutputDevice) {
-				OnOutputDeviceEvent(new OutputDevice(midiOutputDevice));
+				OnOutputDeviceEvent(callbackAdr, new OutputDevice(midiOutputDevice));
 			}
 		};
 
@@ -67,12 +67,12 @@ public class BleMidiManager {
 		deviceDetachedListener = new OnMidiDeviceDetachedListener() {
 			@Override
 			public void onMidiInputDeviceDetached(@NonNull MidiInputDevice midiInputDevice) {
-				OnInputDeviceEvent(new InputDevice(midiInputDevice));
+				OnInputDeviceEvent(callbackAdr, new InputDevice(midiInputDevice));
 			}
 
 			@Override
 			public void onMidiOutputDeviceDetached(@NonNull MidiOutputDevice midiOutputDevice) {
-				OnOutputDeviceEvent(new OutputDevice(midiOutputDevice));
+				OnOutputDeviceEvent(callbackAdr, new OutputDevice(midiOutputDevice));
 			}
 		};
 

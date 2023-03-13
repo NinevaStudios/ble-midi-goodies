@@ -15,4 +15,5 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	static UBleMidiManager* CreateMidiManager();
+	
 };

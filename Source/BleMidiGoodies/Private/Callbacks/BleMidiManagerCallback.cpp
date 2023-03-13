@@ -1,41 +1,32 @@
 ﻿#include "BleMidiManagerCallback.h"
+#include "Async/Async.h"
 
-UBleMidiManagerCallback::UBleMidiManagerCallback()
-{
-	if (StaticClass()->GetDefaultObject() != this)
-	{
-		AddToRoot();
-	}
-}
-
-void UBleMidiManagerCallback::BindOnInputDeviceDelegate(FOnDeviceInputDelegate& Delegate)
+void UBleMidiManagerCallback::BindOnInputDeviceDelegate(const FOnDeviceInputDelegate& Delegate)
 {
 	OnDeviceInputDelegate = Delegate;
 }
 
-void UBleMidiManagerCallback::BindOnOutputDeviceDelegate(FOnDeviceOutputDelegate& Delegate)
+void UBleMidiManagerCallback::BindOnOutputDeviceDelegate(const FOnDeviceOutputDelegate& Delegate)
 {
 	OnDeviceOutputDelegate = Delegate;
 }
 
-void UBleMidiManagerCallback::BindOnScanStatusChangedDelegate(FOnMidiScanStatusChangedDelegate& Delegate)
+void UBleMidiManagerCallback::BindOnScanStatusChangedDelegate(const FOnMidiScanStatusChangedDelegate& Delegate)
 {
 	OnMidiScanStatusChangedDelegate = Delegate;
 }
 
-void UBleMidiManagerCallback::ExecuteOnInputDevice(BleMidiInputDevice* InputDevice)
+void UBleMidiManagerCallback::ExecuteOnInputDevice(UBleMidiInputDevice* InputDevice)
 {
 	AsyncTask(ENamedThreads::GameThread, [=]() {
 		OnDeviceInputDelegate.ExecuteIfBound(InputDevice);
-		this->RemoveFromRoot();
 	});
 }
 
-void UBleMidiManagerCallback::ExecuteOnOutputDevice(BleMidiOutputDevice* OutputDevice)
+void UBleMidiManagerCallback::ExecuteOnOutputDevice(UBleMidiOutputDevice* OutputDevice)
 {
 	AsyncTask(ENamedThreads::GameThread, [=]() {
 		OnDeviceOutputDelegate.ExecuteIfBound(OutputDevice);
-		this->RemoveFromRoot();
 	});
 }
 
@@ -43,7 +34,6 @@ void UBleMidiManagerCallback::ExecuteOnScanStatusChanged(bool Status)
 {
 	AsyncTask(ENamedThreads::GameThread, [=]() {
 		OnMidiScanStatusChangedDelegate.ExecuteIfBound(Status);
-		this->RemoveFromRoot();
 	});
 }
 

@@ -11,14 +11,18 @@ import jp.kshoji.blemidi.listener.OnMidiInputEventListener;
 
 @Keep
 public class InputDevice implements OnMidiInputEventListener {
-	public static native void OnMessageReceived(int type, int[] data);
+	public static native void OnMessageReceived(long callbackAdr, int type, int[] data);
 
 	private final MidiInputDevice _device;
+	private long _callbackAdr;
 
 	public InputDevice(MidiInputDevice device) {
 		_device = device;
-		_device.setOnMidiInputEventListener(this);
+	}
 
+	public void bindCallback(long callbackAdr) {
+		_callbackAdr = callbackAdr;
+		_device.setOnMidiInputEventListener(this);
 	}
 
 	@Keep
@@ -44,7 +48,7 @@ public class InputDevice implements OnMidiInputEventListener {
 			result[i] = bytes[i];
 		}
 
-		OnMessageReceived(MessageType.SystemExclusive, result);
+		OnMessageReceived(_callbackAdr, MessageType.SystemExclusive, result);
 	}
 
 	@Override
@@ -52,7 +56,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiNoteOff: ");
 
 		int[] result = new int[]{channel, note, velocity};
-		OnMessageReceived(MessageType.NoteOff, result);
+		OnMessageReceived(_callbackAdr, MessageType.NoteOff, result);
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiNoteOn: ");
 
 		int[] result = new int[]{channel, note, velocity};
-		OnMessageReceived(MessageType.NoteOn, result);
+		OnMessageReceived(_callbackAdr, MessageType.NoteOn, result);
 	}
 
 	@Override
@@ -68,7 +72,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiPolyphonicAftertouch: ");
 
 		int[] result = new int[]{channel, note, pressure};
-		OnMessageReceived(MessageType.PolyphonicAftertouch, result);
+		OnMessageReceived(_callbackAdr, MessageType.PolyphonicAftertouch, result);
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiControlChange: ");
 
 		int[] result = new int[]{channel, function, value};
-		OnMessageReceived(MessageType.ControlChange, result);
+		OnMessageReceived(_callbackAdr, MessageType.ControlChange, result);
 	}
 
 	@Override
@@ -84,7 +88,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiProgramChange: ");
 
 		int[] result = new int[]{channel, program};
-		OnMessageReceived(MessageType.ProgramChange, result);
+		OnMessageReceived(_callbackAdr, MessageType.ProgramChange, result);
 	}
 
 	@Override
@@ -92,7 +96,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiChannelAftertouch: ");
 
 		int[] result = new int[]{channel, pressure};
-		OnMessageReceived(MessageType.ChannelAftertouch, result);
+		OnMessageReceived(_callbackAdr, MessageType.ChannelAftertouch, result);
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiPitchWheel: ");
 
 		int[] result = new int[]{channel, amount};
-		OnMessageReceived(MessageType.PitchWheel, result);
+		OnMessageReceived(_callbackAdr, MessageType.PitchWheel, result);
 	}
 
 	@Override
@@ -108,7 +112,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiTimeCodeQuarterFrame: ");
 
 		int[] result = new int[]{timing};
-		OnMessageReceived(MessageType.TimeCodeQuarterFrame, result);
+		OnMessageReceived(_callbackAdr, MessageType.TimeCodeQuarterFrame, result);
 	}
 
 	@Override
@@ -116,7 +120,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiSongSelect: ");
 
 		int[] result = new int[]{song};
-		OnMessageReceived(MessageType.SongSelect, result);
+		OnMessageReceived(_callbackAdr, MessageType.SongSelect, result);
 	}
 
 	@Override
@@ -124,7 +128,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiSongPositionPointer: ");
 
 		int[] result = new int[]{position};
-		OnMessageReceived(MessageType.SongPositionPointer, result);
+		OnMessageReceived(_callbackAdr, MessageType.SongPositionPointer, result);
 	}
 
 	@Override
@@ -132,7 +136,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiTuneRequest: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.TuneRequest, result);
+		OnMessageReceived(_callbackAdr, MessageType.TuneRequest, result);
 	}
 
 	@Override
@@ -140,7 +144,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiTimingClock: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.TimingClock, result);
+		OnMessageReceived(_callbackAdr, MessageType.TimingClock, result);
 	}
 
 	@Override
@@ -148,7 +152,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiStart: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.Start, result);
+		OnMessageReceived(_callbackAdr, MessageType.Start, result);
 	}
 
 	@Override
@@ -156,7 +160,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiContinue: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.Continue, result);
+		OnMessageReceived(_callbackAdr, MessageType.Continue, result);
 	}
 
 	@Override
@@ -164,7 +168,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiStop: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.Stop, result);
+		OnMessageReceived(_callbackAdr, MessageType.Stop, result);
 	}
 
 	@Override
@@ -172,7 +176,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiActiveSensing: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.ActiveSensing, result);
+		OnMessageReceived(_callbackAdr, MessageType.ActiveSensing, result);
 	}
 
 	@Override
@@ -180,7 +184,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onMidiReset: ");
 
 		int[] result = new int[0];
-		OnMessageReceived(MessageType.Reset, result);
+		OnMessageReceived(_callbackAdr, MessageType.Reset, result);
 	}
 
 	@Override
@@ -188,7 +192,7 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onRPNMessage: ");
 
 		int[] result = new int[]{channel, function, value};
-		OnMessageReceived(MessageType.RPN, result);
+		OnMessageReceived(_callbackAdr, MessageType.RPN, result);
 	}
 
 	@Override
@@ -196,6 +200,6 @@ public class InputDevice implements OnMidiInputEventListener {
 		Log.d("InputDevice", "onNRPNMessage: ");
 
 		int[] result = new int[]{channel, function, value};
-		OnMessageReceived(MessageType.NRPN, result);
+		OnMessageReceived(_callbackAdr, MessageType.NRPN, result);
 	}
 }

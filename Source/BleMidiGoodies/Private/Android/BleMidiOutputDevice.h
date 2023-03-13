@@ -9,8 +9,6 @@ class UBleMidiOutputDevice : public UObject
 {
 	GENERATED_BODY()
 public:
-	UBleMidiOutputDevice();
-
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Output Device")
 	FString GetName();
 

@@ -3,17 +3,16 @@
 #pragma once
 #include "BleMidiInputDevice.h"
 #include "BleMidiOutputDevice.h"
+#include "Callbacks/BleMidiManagerCallback.h"
 #include "BleMidiManager.generated.h"
-
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceInputDelegate, UBleMidiInputDevice*, Device);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceOutputDelegate, UBleMidiOutputDevice*, Device);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnMidiScanStatusChangedDelegate, bool, Status);
 
 UCLASS()
 class UBleMidiManager : public UObject
 {
 	GENERATED_BODY()
 public:
+
+	~UBleMidiManager();
 	
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Manager")
 	bool Initialize(FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
@@ -54,5 +53,5 @@ private:
 #if PLATFORM_ANDROID
 	jobject javaManager;
 #endif
-
+	UBleMidiManagerCallback* NativeCallback;
 };
