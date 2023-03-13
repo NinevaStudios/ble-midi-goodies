@@ -10,7 +10,6 @@
 
 const ANSICHAR* BleMidiManagerClassName = "com/ninevastudios/blemidilib/BleMidiManager";
 
-
 UBleMidiManager::~UBleMidiManager()
 {
 	if (NativeCallback)

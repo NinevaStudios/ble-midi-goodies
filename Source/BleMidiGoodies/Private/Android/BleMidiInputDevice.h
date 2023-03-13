@@ -5,9 +5,6 @@
 
 #include "BleMidiInputDevice.generated.h"
 
-
-
-
 UCLASS()
 class UBleMidiInputDevice : public UObject
 {

@@ -42,7 +42,7 @@ namespace BleMidiMethodCallUtils
 
 		Env->DeleteLocalRef(Class);
 	}
-	
+
 	jobject CallObjectMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
 	{
 		bool bIsOptional = false;
@@ -62,6 +62,7 @@ namespace BleMidiMethodCallUtils
 
 		return Result;
 	}
+
 	TArray<UBleMidiInputDevice*> ConvertToInputArray(jobjectArray javaObjectArray)
 	{
 		TArray<UBleMidiInputDevice*> objectArray;
@@ -139,7 +140,8 @@ jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray)
 {
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	jobjectArray javaStringArray = (jobjectArray)Env->NewObjectArray(stringArray.Num(), FJavaWrapper::JavaStringClass, nullptr);
+	jobjectArray javaStringArray = (jobjectArray)Env->NewObjectArray(stringArray.Num(), FJavaWrapper::JavaStringClass,
+	                                                                 nullptr);
 
 	for (int i = 0; i < stringArray.Num(); i++)
 	{
@@ -147,4 +149,58 @@ jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray)
 	}
 
 	return javaStringArray;
+}
+
+TArray<int> ConvertToIntArray(jintArray javaArray)
+{
+	TArray<int> intArray;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	jint* javaInt = Env->GetIntArrayElements(javaArray, 0);
+
+	int length = Env->GetArrayLength(javaArray);
+
+	for (int i = 0; i < length; i++)
+	{
+		intArray.Add(javaInt[i]);
+	}
+
+	return intArray;
+}
+
+TArray<FString> ConvertToStringArray(jobjectArray javaStringArray)
+{
+	TArray<FString> stringArray;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	int length = Env->GetArrayLength(javaStringArray);
+
+	for (int i = 0; i < length; i++)
+	{
+		jstring javaString = static_cast<jstring>(Env->GetObjectArrayElement(javaStringArray, i));
+
+		stringArray.Add(FJavaHelper::FStringFromParam(Env, javaString));
+	}
+
+	return stringArray;
+}
+
+TArray<bool> ConvertToBoolArray(jobjectArray javaBooleanArray)
+{
+	TArray<bool> boolArray;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	int length = Env->GetArrayLength(javaBooleanArray);
+
+	for (int i = 0; i < length; i++)
+	{
+		jboolean javaBool = static_cast<jboolean>(Env->GetObjectArrayElement(javaBooleanArray, i));
+
+		boolArray.Add(javaBool);
+	}
+
+	return boolArray;
 }

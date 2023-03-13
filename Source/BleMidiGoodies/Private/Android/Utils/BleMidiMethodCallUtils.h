@@ -18,4 +18,7 @@ namespace BleMidiMethodCallUtils
 	jintArray ConvertToJIntArray(const TArray<int>& intArray);
 	void CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...);
 	jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray);
+	TArray<int> ConvertToIntArray(jintArray javaArray);
+	TArray<FString> ConvertToStringArray(jobjectArray javaStringArray);
+	TArray<bool> ConvertToBoolArray(jobjectArray javaBooleanArray);
 };

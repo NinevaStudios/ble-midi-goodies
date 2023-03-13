@@ -9,7 +9,6 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jp.kshoji.blemidi.central.BleMidiCentralProvider;
 import jp.kshoji.blemidi.device.MidiInputDevice;

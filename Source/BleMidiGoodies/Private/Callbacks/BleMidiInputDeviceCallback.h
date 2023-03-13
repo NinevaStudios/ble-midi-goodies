@@ -38,7 +38,7 @@ public:
 	
 	void BindOnMessageReceivedDelegate(const FOnMessageReceivedDelegate& Delegate);
 
-	void ExecuteOnMessageReceivedDelegate(EMidiMessageType Type, TArray<int> Data);
+	void ExecuteOnMessageReceived(EMidiMessageType Type, TArray<int> Data);
 
 private:
 

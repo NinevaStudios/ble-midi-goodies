@@ -6,6 +6,8 @@
 
 class UBleMidiManager;
 
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnPermissionGrantResultDelegate, TArray<FString>&, Permissions, TArray<bool>, Granted);
+
 UCLASS()
 class UBleMidiBPL : public UBlueprintFunctionLibrary
 {
@@ -25,6 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
 	static void OpenApplicationSettings();
 
+	static void ExecutePermissionResultDelegate(TArray<FString>& Permissions, TArray<bool> Granted);
 private:
 	static const ANSICHAR* UtilsClassName;
+		
+	static FOnPermissionGrantResultDelegate OnPermissionGrantResultDelegate;
 };

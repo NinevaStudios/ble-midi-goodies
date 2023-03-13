@@ -2,6 +2,8 @@
 
 #include "BleMidiBPL.h"
 #include "BleMidiManager.h"
+#include "Android/AndroidPlatform.h"
+#include "Async/Async.h"
 
 #if PLATFORM_ANDROID
 #include "Android/Utils/BleMidiMethodCallUtils.h"
@@ -18,7 +20,7 @@ void UBleMidiBPL::RequestBluetoothPermissions()
 {
 #if PLATFORM_ANDROID
 	BleMidiMethodCallUtils::CallStaticVoidMethod(UtilsClassName, "requestBluetoothPermissions",
-		"(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
+		"(JLandroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
 
@@ -38,3 +40,24 @@ void UBleMidiBPL::OpenApplicationSettings()
 		"(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
+
+void UBleMidiBPL::ExecutePermissionResultDelegate(TArray<FString>& Permissions, TArray<bool> Granted)
+{
+	if (OnPermissionGrantResultDelegate.IsBound())
+	{
+		AsyncTask(ENamedThreads::GameThread, [=]() {
+			OnPermissionGrantResultDelegate.ExecuteIfBound(Permissions, Granted);
+		});
+	}
+
+}
+
+#if PLATFORM_ANDROID
+
+JNI_METHOD void Java_com_ninevastudios_blemidilib_Utils_OnPermissionGrantResult(JNIEnv* env, jclass clazz, jobjectArray permissions, jobjectArray granted)
+{
+	UBleMidiBPL::ExecutePermissionResultDelegate(BleMidiMethodCallUtils::ConvertToStringArray(permissions),
+		BleMidiMethodCallUtils::ConvertToBoolArray());
+}
+
+#endif

@@ -4,9 +4,9 @@
 -->
 <root xmlns:android="http://schemas.android.com/apk/res/android">
     <init>
-        <log text="[FirebaseGoodies] Android UPL initialization"/>
+        <log text="[BleMidiGoodies] Android UPL initialization"/>
     </init>
     <prebuildCopies>
-        <copyDir src="$S(PluginDir)/Private/Android/Java" dst="$S(BuildDir)/src/com/nineva/blemidi" />
+        <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/ninevastudios/blemidilib" />
     </prebuildCopies>
 </root>
