@@ -2,9 +2,15 @@
 
 #pragma once
 
+#if PLATFORM_ANDROID
+#include "Android/AndroidApplication.h"
+#include "Android/AndroidJNI.h"
+#include "Android/AndroidJava.h"
+#endif
+
 #include "BleMidiOutputDevice.generated.h"
 
-UCLASS()
+UCLASS(BlueprintType)
 class BLEMIDIGOODIES_API UBleMidiOutputDevice : public UObject
 {
 	GENERATED_BODY()
@@ -29,7 +35,7 @@ private:
 
 public:
 #if PLATFORM_ANDROID
-	FORCEINLINE jobject* GetOutputDevice() const { return OutputDevice; }
+	jobject GetOutputDevice() { return OutputDevice; }
 #endif
 
 };

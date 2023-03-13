@@ -89,7 +89,7 @@ JNI_METHOD void Java_com_ninevastudios_blemidilib_BleMidiManager_OnMidiScanStatu
 	if (IsValid(callback))
 	{
 		AsyncTask(ENamedThreads::GameThread, [=]() {
-		callback->ExecuteOnOutputDevice(status);
+		callback->ExecuteOnScanStatusChanged(status);
 	});
 	}
 	else

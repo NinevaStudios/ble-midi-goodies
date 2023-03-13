@@ -8,7 +8,7 @@ class UBleMidiManager;
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnPermissionGrantResultDelegate, const TArray<FString>&, Permissions, const TArray<bool>&, Granted);
 
-UCLASS()
+UCLASS(BlueprintType)
 class BLEMIDIGOODIES_API UBleMidiBPL : public UBlueprintFunctionLibrary
 {
 GENERATED_BODY()

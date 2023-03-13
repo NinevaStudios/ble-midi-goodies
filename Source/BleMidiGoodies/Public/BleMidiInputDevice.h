@@ -2,11 +2,17 @@
 
 #pragma once
 
+#if PLATFORM_ANDROID
+#include "Android/AndroidApplication.h"
+#include "Android/AndroidJNI.h"
+#include "Android/AndroidJava.h"
+#endif
+
 #include "BleMidiInputDevice.generated.h"
 
 class UBleMidiInputDeviceCallback;
 
-UENUM()
+UENUM(BlueprintType)
 enum class EMidiMessageType : uint8
 {
 	E_MMT_SystemExclusive = 0 UMETA(DisplayName = "SystemExclusive"),
@@ -33,7 +39,7 @@ enum class EMidiMessageType : uint8
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnMessageReceivedDelegate, EMidiMessageType, Type, const TArray<int>&, Data);
 
-UCLASS()
+UCLASS(BlueprintType)
 class BLEMIDIGOODIES_API UBleMidiInputDevice : public UObject
 {
 	GENERATED_BODY()
@@ -60,7 +66,7 @@ private:
 
 public:
 #if PLATFORM_ANDROID
-	FORCEINLINE jobject* GetInputDevice() const { return InputDevice; }
+	jobject GetInputDevice() { return InputDevice; }
 #endif
 
 	UBleMidiInputDeviceCallback* NativeCallback;

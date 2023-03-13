@@ -1,7 +1,9 @@
 ﻿// Copyright (c) 2023 Nineva Studios
 
-#include "Android/BleMidiInputDevice.h"
-#include "Android/BleMidiOutputDevice.h"
+#include "BleMidiMethodCallUtils.h"
+
+#include "BleMidiInputDevice.h"
+#include "BleMidiOutputDevice.h"
 
 namespace BleMidiMethodCallUtils
 {
@@ -195,12 +197,41 @@ TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray)
 
 	int length = Env->GetArrayLength(javaBooleanArray);
 
+	jboolean* javaBooleans = Env->GetBooleanArrayElements(javaBooleanArray, 0);
+
 	for (int i = 0; i < length; i++)
 	{
-		jboolean javaBool = static_cast<jboolean>(Env->GetObjectArrayElement(javaBooleanArray, i));
-
-		boolArray.Add(javaBool);
+		boolArray.Add((bool) javaBooleans[i]);
 	}
 
 	return boolArray;
+}
+
+FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+{
+	bool bIsOptional = false;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	jclass Class = Env->GetObjectClass(object);
+
+	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+
+	va_list Args;
+	va_start(Args, MethodSignature);
+	jstring Return = static_cast<jstring>(Env->CallObjectMethodV(object, Method, Args));
+	va_end(Args);
+
+	if (Return == nullptr)
+	{
+		return FString();
+	}
+
+	const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
+	FString Result(UTF8_TO_TCHAR(UTFString));
+	Env->ReleaseStringUTFChars(Return, UTFString);
+
+	Env->DeleteLocalRef(Class);
+
+	return Result;
 }

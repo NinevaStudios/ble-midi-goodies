@@ -5,8 +5,9 @@
 #include "Android/AndroidApplication.h"
 #include "Android/AndroidJNI.h"
 #include "Android/AndroidJava.h"
-#include "Android/BleMidiInputDevice.h"
-#include "Android/BleMidiOutputDevice.h"
+
+class UBleMidiOutputDevice;
+class UBleMidiInputDevice;
 
 namespace BleMidiMethodCallUtils
 {
@@ -21,4 +22,6 @@ namespace BleMidiMethodCallUtils
 	TArray<int> ConvertToIntArray(jintArray javaArray);
 	TArray<FString> ConvertToStringArray(jobjectArray javaStringArray);
 	TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray);
+	FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...);
+
 };

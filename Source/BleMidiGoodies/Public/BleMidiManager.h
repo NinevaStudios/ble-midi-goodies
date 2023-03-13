@@ -3,6 +3,13 @@
 #pragma once
 #include "BleMidiInputDevice.h"
 #include "BleMidiOutputDevice.h"
+
+#if PLATFORM_ANDROID
+#include "Android/AndroidApplication.h"
+#include "Android/AndroidJNI.h"
+#include "Android/AndroidJava.h"
+#endif
+
 #include "BleMidiManager.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDeviceInputDelegate, UBleMidiInputDevice*, Device);
@@ -11,7 +18,7 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnMidiScanStatusChangedDelegate, bool, Status
 
 class UBleMidiManagerCallback;
 
-UCLASS()
+UCLASS(BlueprintType)
 class BLEMIDIGOODIES_API UBleMidiManager : public UObject
 {
 	GENERATED_BODY()
@@ -56,7 +63,7 @@ public:
 
 private:
 #if PLATFORM_ANDROID
-	jobject javaManager;
+	jobject JavaManager;
 #endif
 	UBleMidiManagerCallback* NativeCallback;
 };

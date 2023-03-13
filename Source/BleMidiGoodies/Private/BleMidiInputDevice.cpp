@@ -7,8 +7,6 @@
 #include "Android/Utils/BleMidiMethodCallUtils.h"
 #endif
 
-const ANSICHAR* BleMidiInputDeviceClassName = "com/ninevastudios/blemidilib/InputDevice";
-
 UBleMidiInputDevice::~UBleMidiInputDevice()
 {
 	if (NativeCallback)
@@ -21,7 +19,8 @@ FString UBleMidiInputDevice::GetName()
 {
 	FString Name;
 #if PLATFORM_ANDROID
-	Name = BleMidiMethodCallUtils::CallStringMethod(BleMidiInputDeviceClassName, "getName", "()Ljava/lang/String;");
+	if (InputDevice != nullptr)	
+		Name = BleMidiMethodCallUtils::CallStringMethod(InputDevice, "getName", "()Ljava/lang/String;");
 #endif
 	return Name;
 }
@@ -30,7 +29,8 @@ FString UBleMidiInputDevice::GetAddress()
 {
 	FString Address;
 #if PLATFORM_ANDROID
-	Address = BleMidiMethodCallUtils::CallStringMethod(BleMidiInputDeviceClassName, "getAddress", "()Ljava/lang/String;");
+	if (InputDevice != nullptr)	
+		Address = BleMidiMethodCallUtils::CallStringMethod(InputDevice, "getAddress", "()Ljava/lang/String;");
 #endif
 	return Address;
 }
@@ -42,13 +42,13 @@ void UBleMidiInputDevice::BindOnMessageReceivedCallback(const FOnMessageReceived
 	NativeCallback->AddToRoot();
 
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiInputDeviceClassName, "bindCallback", "(J)V", (jlong) NativeCallback);
+	BleMidiMethodCallUtils::CallVoidMethod(InputDevice, "bindCallback", "(J)V", (jlong) NativeCallback);
 #endif
 }
 
 #if PLATFORM_ANDROID
 
-UBleMidiInputDevice::Init(jobject Object)
+void UBleMidiInputDevice::Init(jobject Object)
 {
 	InputDevice = Object;
 }

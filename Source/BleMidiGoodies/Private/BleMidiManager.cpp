@@ -8,8 +8,6 @@
 #include "Android/Utils/BleMidiMethodCallUtils.h"
 #endif
 
-const ANSICHAR* BleMidiManagerClassName = "com/ninevastudios/blemidilib/BleMidiManager";
-
 UBleMidiManager::~UBleMidiManager()
 {
 	if (NativeCallback)
@@ -29,7 +27,14 @@ bool UBleMidiManager::Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiS
 
 	bool bIsInitializationSuccessful = false;
 #if PLATFORM_ANDROID
-	bIsInitializationSuccessful = BleMidiMethodCallUtils::CallBoolMethod(BleMidiManagerClassName, "initialize",
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+	jclass ManagerClass = FAndroidApplication::FindJavaClass("com/ninevastudios/blemidilib/BleMidiManager");
+	jmethodID Constructor = FJavaWrapper::FindMethod(Env, ManagerClass, "<init>", "()V", false);
+	
+	JavaManager = Env->NewObject(ManagerClass, Constructor);
+	if(JavaManager != nullptr)
+		bIsInitializationSuccessful = BleMidiMethodCallUtils::CallBoolMethod(JavaManager, "initialize",
 		"(JLandroid/app/Activity;)Z", (jlong) NativeCallback, FJavaWrapper::GameActivityThis);
 #endif
 	return bIsInitializationSuccessful;
@@ -39,7 +44,8 @@ bool UBleMidiManager::IsBleSupported()
 {
 	bool bIsBleSupported = false;
 #if PLATFORM_ANDROID
-	bIsBleSupported = BleMidiMethodCallUtils::CallBoolMethod(BleMidiManagerClassName, "isBleSupported",
+	if(JavaManager != nullptr)
+		bIsBleSupported = BleMidiMethodCallUtils::CallBoolMethod(JavaManager, "isBleSupported",
 		"(Landroid/app/Activity;)Z", FJavaWrapper::GameActivityThis);
 #endif
 	return bIsBleSupported;
@@ -49,7 +55,8 @@ bool UBleMidiManager::IsBleEnabled()
 {
 	bool bIsBleEnabled = false;
 #if PLATFORM_ANDROID
-	bIsBleEnabled = BleMidiMethodCallUtils::CallBoolMethod(BleMidiManagerClassName, "isBluetoothEnabled", "()Z");
+	if(JavaManager != nullptr)
+		bIsBleEnabled = BleMidiMethodCallUtils::CallBoolMethod(JavaManager, "isBluetoothEnabled", "()Z");
 #endif
 	return bIsBleEnabled;
 }
@@ -57,42 +64,48 @@ bool UBleMidiManager::IsBleEnabled()
 void UBleMidiManager::SetBluetoothState(bool IsEnabled)
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "setBluetoothState", "(Z)V", IsEnabled);
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "setBluetoothState", "(Z)V", IsEnabled);
 #endif
 }
 
 void UBleMidiManager::SetRequestPairing(bool NeedPairing)
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "setRequestPairing", "(Z)V", NeedPairing);
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "setRequestPairing", "(Z)V", NeedPairing);
 #endif
 }
 
 void UBleMidiManager::StartScan(int TimeoutInMilliSeconds)
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "startScan", "(I)V", TimeoutInMilliSeconds);
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "startScan", "(I)V", TimeoutInMilliSeconds);
 #endif
 }
 
 void UBleMidiManager::StopScan()
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "stopScan", "()V");
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "stopScan", "()V");
 #endif
 }
 
 void UBleMidiManager::DisconnectInputDevice(UBleMidiInputDevice* MidiInputDevice)
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "disconnectInputDevice", "(Lcom/ninevastudios/blemidilib/InputDevice;)V", MidiInputDevice->GetInputDevice());
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "disconnectInputDevice", "(Lcom/ninevastudios/blemidilib/InputDevice;)V", MidiInputDevice->GetInputDevice());
 #endif
 }
 
 void UBleMidiManager::DisconnectOutputDevice(UBleMidiOutputDevice* MidiOutputDevice)
 {
 #if PLATFORM_ANDROID
-	BleMidiMethodCallUtils::CallVoidMethod(BleMidiManagerClassName, "disconnectOutputDevice", "(Lcom/ninevastudios/blemidilib/OutputDevice;)V", MidiOutputDevice->GetOutputDevice());
+	if(JavaManager != nullptr)
+		BleMidiMethodCallUtils::CallVoidMethod(JavaManager, "disconnectOutputDevice", "(Lcom/ninevastudios/blemidilib/OutputDevice;)V", MidiOutputDevice->GetOutputDevice());
 #endif
 }
 
@@ -100,8 +113,12 @@ TArray<UBleMidiInputDevice*> UBleMidiManager::GetMidiInputDevices()
 {
 	TArray<UBleMidiInputDevice*> InputDevices;
 #if PLATFORM_ANDROID
-	jobjectArray InputDevicesObjectArray = BleMidiMethodCallUtils::CallObjectMethod(BleMidiManagerClassName, "getMidiInputDevices", "()[Lcom/ninevastudios/blemidilib/InputDevice;");
-	InputDevices = BleMidiMethodCallUtils::ConvertToInputArray(InputDevicesObjectArray);
+	if(JavaManager != nullptr)
+	{
+		jobjectArray InputDevicesObjectArray = static_cast<jobjectArray>(BleMidiMethodCallUtils::CallObjectMethod(JavaManager, "getMidiInputDevices",
+			"()[Lcom/ninevastudios/blemidilib/InputDevice;"));
+		InputDevices = BleMidiMethodCallUtils::ConvertToInputArray(InputDevicesObjectArray);
+	}
 #endif
 	return InputDevices;
 }
@@ -110,8 +127,12 @@ TArray<UBleMidiOutputDevice*> UBleMidiManager::GetMidiOutputDevices()
 {
 	TArray<UBleMidiOutputDevice*> OutputDevices;
 #if PLATFORM_ANDROID
-	jobjectArray OutputDevicesObjectArray = BleMidiMethodCallUtils::CallObjectMethod(BleMidiManagerClassName, "getMidiOutputDevices", "()[Lcom/ninevastudios/blemidilib/OutputDevice;");
-	OutputDevices = BleMidiMethodCallUtils::ConvertToInputArray(OutputDevicesObjectArray);
+	if(JavaManager != nullptr)
+	{
+		jobjectArray OutputDevicesObjectArray = static_cast<jobjectArray>(BleMidiMethodCallUtils::CallObjectMethod(JavaManager, "getMidiOutputDevices",
+			"()[Lcom/ninevastudios/blemidilib/OutputDevice;"));
+		OutputDevices = BleMidiMethodCallUtils::ConvertToOutputArray(OutputDevicesObjectArray);
+	}
 #endif
 	return OutputDevices;
 }
