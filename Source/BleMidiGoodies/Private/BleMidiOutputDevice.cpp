@@ -38,7 +38,6 @@ FString UBleMidiOutputDevice::GetAddress()
 void UBleMidiOutputDevice::SendMessage(int Type, TArray<int> Data)
 {
 #if PLATFORM_ANDROID
-	// TODO: ConvertToJIntArray(Data) may need specifier * or &
 	if(OutputDevice != nullptr)
 		BleMidiMethodCallUtils::CallVoidMethod(OutputDevice, "sendMessage", "(I[I)V", Type, BleMidiMethodCallUtils::ConvertToJIntArray(Data));
 #endif
@@ -48,7 +47,6 @@ void UBleMidiOutputDevice::SendMessage(int Type, TArray<int> Data)
 
 void UBleMidiOutputDevice::Init(jobject Object)
 {
-	// OutputDevice = Object;
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 	OutputDevice = Env->NewGlobalRef(Object);
 }

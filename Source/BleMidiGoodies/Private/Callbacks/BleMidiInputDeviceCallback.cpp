@@ -17,8 +17,6 @@ void UBleMidiInputDeviceCallback::ExecuteOnMessageReceived(EMidiMessageType Type
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_ninevastudios_blemidilib_InputDevice_OnMessageReceived(JNIEnv* env, jclass clazz, jlong objAddr, jint type, jintArray data)
 {
-	UE_LOG(LogTemp, Error, TEXT("In OnMessageReceived callback"));
-
 	UBleMidiInputDeviceCallback* callback = reinterpret_cast<UBleMidiInputDeviceCallback*>(objAddr);
 	if (IsValid(callback))
 	{
