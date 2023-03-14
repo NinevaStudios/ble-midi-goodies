@@ -17,16 +17,20 @@ UBleMidiManager* UBleMidiBPL::CreateMidiManager()
 	return NewObject<UBleMidiManager>();	
 }
 
-void UBleMidiBPL::RequestBluetoothPermissions()
+void UBleMidiBPL::RequestBluetoothPermissions(const FOnPermissionGrantResultDelegate& Callback)
 {
+	OnPermissionGrantResultDelegate = Callback;
+	
 #if PLATFORM_ANDROID
 	BleMidiMethodCallUtils::CallStaticVoidMethod(UtilsClassName, "requestBluetoothPermissions",
-		"(JLandroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
+		"(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis);
 #endif
 }
 
-void UBleMidiBPL::RequestPermissions(const TArray<FString>& Permissions)
+void UBleMidiBPL::RequestPermissions(const TArray<FString>& Permissions, const FOnPermissionGrantResultDelegate& Callback)
 {
+	OnPermissionGrantResultDelegate = Callback;
+	
 #if PLATFORM_ANDROID
 	BleMidiMethodCallUtils::CallStaticVoidMethod(UtilsClassName, "requestPermissions",
 		"(Landroid/app/Activity;[Ljava/lang/String;)V", FJavaWrapper::GameActivityThis,

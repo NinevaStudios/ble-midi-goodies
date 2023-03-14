@@ -6,6 +6,15 @@
 #include "Android/Utils/BleMidiMethodCallUtils.h"
 #endif
 
+UBleMidiOutputDevice::~UBleMidiOutputDevice()
+{
+#if PLATFORM_ANDROID
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	Env->DeleteGlobalRef(OutputDevice);
+	OutputDevice = nullptr;
+#endif
+}
+
 FString UBleMidiOutputDevice::GetName()
 {
 	FString Name;
@@ -39,7 +48,9 @@ void UBleMidiOutputDevice::SendMessage(int Type, TArray<int> Data)
 
 void UBleMidiOutputDevice::Init(jobject Object)
 {
-	OutputDevice = Object;
+	// OutputDevice = Object;
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	OutputDevice = Env->NewGlobalRef(Object);
 }
 
 #endif

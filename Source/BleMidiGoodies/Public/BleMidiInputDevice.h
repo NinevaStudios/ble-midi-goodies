@@ -44,6 +44,7 @@ class BLEMIDIGOODIES_API UBleMidiInputDevice : public UObject
 {
 	GENERATED_BODY()
 public:
+	
 	~UBleMidiInputDevice();
 	
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi|Input Device")

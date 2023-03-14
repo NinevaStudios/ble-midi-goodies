@@ -11,6 +11,25 @@
         <copyFile src="$S(PluginDir)/../ThirdParty/BLE-MIDI-library-release.aar" dst="$S(BuildDir)/gradle/app/libs/BLE-MIDI-library-release.aar" />
     </prebuildCopies>
 
+    <androidManifestUpdates>
+        <!-- Add permissions -->
+        <addPermission android:name="android.permission.BLUETOOTH" />
+        <addPermission android:name="android.permission.BLUETOOTH_ADMIN" />
+        <addPermission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        <addPermission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+        <!-- New permissions for Android 12, also must be requested as runtime permission -->
+        <!-- See https://xizzhu.me/post/2021-10-05-android-12-bluetooth-permissions/ -->
+        <addPermission android:name="android.permission.BLUETOOTH_CONNECT" />
+        <addPermission android:name="android.permission.BLUETOOTH_SCAN" />
+
+        <addFeature android:name="android.hardware.bluetooth_le" android:required="false" />
+
+        <addElements tag="application">
+            <activity android:name="com.ninevastudios.blemidilib.IntermediateActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:exported="false"/>
+        </addElements>
+    </androidManifestUpdates>
+
     <buildGradleAdditions>
         <insert>
             android {

@@ -19,10 +19,10 @@ public:
 	static UBleMidiManager* CreateMidiManager();
 
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
-	static void RequestBluetoothPermissions();
+	static void RequestBluetoothPermissions(const FOnPermissionGrantResultDelegate& Callback);
 
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
-	static void RequestPermissions(const TArray<FString>& Permissions);
+	static void RequestPermissions(const TArray<FString>& Permissions, const FOnPermissionGrantResultDelegate& Callback);
 
 	UFUNCTION(BlueprintCallable, Category = "Ble Midi")
 	static void OpenApplicationSettings();

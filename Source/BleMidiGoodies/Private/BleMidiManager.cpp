@@ -14,6 +14,11 @@ UBleMidiManager::~UBleMidiManager()
 	{
 		NativeCallback->RemoveFromRoot();
 	}
+#if PLATFORM_ANDROID
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	Env->DeleteGlobalRef(JavaManager);
+	JavaManager = nullptr;
+#endif
 }
 
 bool UBleMidiManager::Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiScanStatusChangedDelegate,
@@ -28,14 +33,14 @@ bool UBleMidiManager::Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiS
 	bool bIsInitializationSuccessful = false;
 #if PLATFORM_ANDROID
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
+	
 	jclass ManagerClass = FAndroidApplication::FindJavaClass("com/ninevastudios/blemidilib/BleMidiManager");
 	jmethodID Constructor = FJavaWrapper::FindMethod(Env, ManagerClass, "<init>", "()V", false);
 	
-	JavaManager = Env->NewObject(ManagerClass, Constructor);
+	JavaManager = Env->NewGlobalRef(Env->NewObject(ManagerClass, Constructor));
 	if(JavaManager != nullptr)
 		bIsInitializationSuccessful = BleMidiMethodCallUtils::CallBoolMethod(JavaManager, "initialize",
-		"(JLandroid/app/Activity;)Z", (jlong) NativeCallback, FJavaWrapper::GameActivityThis);
+		"(Landroid/app/Activity;J)Z", (jlong) NativeCallback, FJavaWrapper::GameActivityThis);
 #endif
 	return bIsInitializationSuccessful;
 }

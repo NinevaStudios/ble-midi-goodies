@@ -13,6 +13,11 @@ UBleMidiInputDevice::~UBleMidiInputDevice()
 	{
 		NativeCallback->RemoveFromRoot();
 	}
+#if PLATFORM_ANDROID
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	Env->DeleteGlobalRef(InputDevice);
+	InputDevice = nullptr;
+#endif
 }
 
 FString UBleMidiInputDevice::GetName()
@@ -50,7 +55,8 @@ void UBleMidiInputDevice::BindOnMessageReceivedCallback(const FOnMessageReceived
 
 void UBleMidiInputDevice::Init(jobject Object)
 {
-	InputDevice = Object;
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	InputDevice = Env->NewGlobalRef(Object);
 }
 
 #endif
