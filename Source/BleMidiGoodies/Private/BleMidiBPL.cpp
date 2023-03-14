@@ -6,7 +6,7 @@
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidPlatform.h"
-#include "Android/Utils/BleMidiMethodCallUtils.h"
+#include "Utils/BleMidiMethodCallUtils.h"
 #endif
 
 const ANSICHAR* UBleMidiBPL::UtilsClassName = "com/ninevastudios/blemidilib/Utils";

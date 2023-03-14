@@ -24,4 +24,4 @@ namespace BleMidiMethodCallUtils
 	TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray);
 	FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...);
 
-};
+}

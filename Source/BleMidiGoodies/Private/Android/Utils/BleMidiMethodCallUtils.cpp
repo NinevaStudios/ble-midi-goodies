@@ -118,120 +118,123 @@ namespace BleMidiMethodCallUtils
 
 		return javaIntArray;
 	}
-}
 
-void CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	bool bIsOptional = false;
-
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	jclass Class = FAndroidApplication::FindJavaClass(ClassName);
-
-	jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
-
-	va_list Args;
-	va_start(Args, MethodSignature);
-	Env->CallStaticVoidMethodV(Class, Method, Args);
-	va_end(Args);
-
-	Env->DeleteLocalRef(Class);
-}
-
-jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray)
-{
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	jobjectArray javaStringArray = (jobjectArray)Env->NewObjectArray(stringArray.Num(), FJavaWrapper::JavaStringClass,
-	                                                                 nullptr);
-
-	for (int i = 0; i < stringArray.Num(); i++)
+	void CallStaticVoidMethod(const ANSICHAR* ClassName, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature,
+							  ...)
 	{
-		Env->SetObjectArrayElement(javaStringArray, i, *FJavaClassObject::GetJString(stringArray[i]));
+		bool bIsOptional = false;
+
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		jclass Class = FAndroidApplication::FindJavaClass(ClassName);
+
+		jmethodID Method = FJavaWrapper::FindStaticMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+
+		va_list Args;
+		va_start(Args, MethodSignature);
+		Env->CallStaticVoidMethodV(Class, Method, Args);
+		va_end(Args);
+
+		Env->DeleteLocalRef(Class);
 	}
 
-	return javaStringArray;
-}
-
-TArray<int> ConvertToIntArray(jintArray javaArray)
-{
-	TArray<int> intArray;
-
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	jint* javaInt = Env->GetIntArrayElements(javaArray, 0);
-
-	int length = Env->GetArrayLength(javaArray);
-
-	for (int i = 0; i < length; i++)
+	jobjectArray ConvertToJStringArray(const TArray<FString>& stringArray)
 	{
-		intArray.Add(javaInt[i]);
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		jobjectArray javaStringArray = (jobjectArray)Env->NewObjectArray(
+			stringArray.Num(), FJavaWrapper::JavaStringClass,
+			nullptr);
+
+		for (int i = 0; i < stringArray.Num(); i++)
+		{
+			Env->SetObjectArrayElement(javaStringArray, i, *FJavaClassObject::GetJString(stringArray[i]));
+		}
+
+		return javaStringArray;
 	}
 
-	return intArray;
-}
-
-TArray<FString> ConvertToStringArray(jobjectArray javaStringArray)
-{
-	TArray<FString> stringArray;
-
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	int length = Env->GetArrayLength(javaStringArray);
-
-	for (int i = 0; i < length; i++)
+	TArray<int> ConvertToIntArray(jintArray javaArray)
 	{
-		jstring javaString = static_cast<jstring>(Env->GetObjectArrayElement(javaStringArray, i));
+		TArray<int> intArray;
 
-		stringArray.Add(FJavaHelper::FStringFromParam(Env, javaString));
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		jint* javaInt = Env->GetIntArrayElements(javaArray, 0);
+
+		int length = Env->GetArrayLength(javaArray);
+
+		for (int i = 0; i < length; i++)
+		{
+			intArray.Add(javaInt[i]);
+		}
+
+		return intArray;
 	}
 
-	return stringArray;
-}
-
-TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray)
-{
-	TArray<bool> boolArray;
-
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	int length = Env->GetArrayLength(javaBooleanArray);
-
-	jboolean* javaBooleans = Env->GetBooleanArrayElements(javaBooleanArray, 0);
-
-	for (int i = 0; i < length; i++)
+	TArray<FString> ConvertToStringArray(jobjectArray javaStringArray)
 	{
-		boolArray.Add((bool) javaBooleans[i]);
+		TArray<FString> stringArray;
+
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		int length = Env->GetArrayLength(javaStringArray);
+
+		for (int i = 0; i < length; i++)
+		{
+			jstring javaString = static_cast<jstring>(Env->GetObjectArrayElement(javaStringArray, i));
+
+			stringArray.Add(FJavaHelper::FStringFromParam(Env, javaString));
+		}
+
+		return stringArray;
 	}
 
-	return boolArray;
-}
-
-FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
-{
-	bool bIsOptional = false;
-
-	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
-
-	jclass Class = Env->GetObjectClass(object);
-
-	jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
-
-	va_list Args;
-	va_start(Args, MethodSignature);
-	jstring Return = static_cast<jstring>(Env->CallObjectMethodV(object, Method, Args));
-	va_end(Args);
-
-	if (Return == nullptr)
+	TArray<bool> ConvertToBoolArray(jbooleanArray javaBooleanArray)
 	{
-		return FString();
+		TArray<bool> boolArray;
+
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+		int length = Env->GetArrayLength(javaBooleanArray);
+
+		jboolean* javaBooleans = Env->GetBooleanArrayElements(javaBooleanArray, 0);
+
+		for (int i = 0; i < length; i++)
+		{
+			boolArray.Add((bool)javaBooleans[i]);
+		}
+
+		return boolArray;
 	}
 
-	const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
-	FString Result(UTF8_TO_TCHAR(UTFString));
-	Env->ReleaseStringUTFChars(Return, UTFString);
+	FString CallStringMethod(jobject object, const ANSICHAR* MethodName, const ANSICHAR* MethodSignature, ...)
+	{
+		bool bIsOptional = false;
 
-	Env->DeleteLocalRef(Class);
+		JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 
-	return Result;
+		jclass Class = Env->GetObjectClass(object);
+
+		jmethodID Method = FJavaWrapper::FindMethod(Env, Class, MethodName, MethodSignature, bIsOptional);
+
+		va_list Args;
+		va_start(Args, MethodSignature);
+		jstring Return = static_cast<jstring>(Env->CallObjectMethodV(object, Method, Args));
+		va_end(Args);
+
+		if (Return == nullptr)
+		{
+			return FString();
+		}
+
+		const char* UTFString = Env->GetStringUTFChars(Return, nullptr);
+		FString Result(UTF8_TO_TCHAR(UTFString));
+		Env->ReleaseStringUTFChars(Return, UTFString);
+
+		Env->DeleteLocalRef(Class);
+
+		return Result;
+	}
 }
+

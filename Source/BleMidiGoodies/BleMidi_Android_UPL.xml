@@ -8,5 +8,29 @@
     </init>
     <prebuildCopies>
         <copyDir src="$S(PluginDir)/Private/Java" dst="$S(BuildDir)/src/com/ninevastudios/blemidilib" />
+        <copyFile src="$S(PluginDir)/../ThirdParty/BLE-MIDI-library-release.aar" dst="$S(BuildDir)/gradle/app/libs/BLE-MIDI-library-release.aar" />
     </prebuildCopies>
+
+    <buildGradleAdditions>
+        <insert>
+            android {
+                compileOptions {
+                    targetCompatibility JavaVersion.VERSION_1_8
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                }
+            }
+            
+            dependencies {
+                implementation fileTree(dir: 'libs', include: ['*.aar'])
+            }
+        </insert>
+    </buildGradleAdditions>
+
+    <proguardAdditions>
+        <insert>
+            -dontwarn com.ninevastudios.**
+            -keep class com.ninevastudios.** { *; }
+            -keep interface com.ninevastudios.** { *; }
+        </insert>
+    </proguardAdditions>
 </root>
