@@ -40,7 +40,7 @@ bool UBleMidiManager::Initialize(const FOnMidiScanStatusChangedDelegate& OnMidiS
 	JavaManager = Env->NewGlobalRef(Env->NewObject(ManagerClass, Constructor));
 	if(JavaManager != nullptr)
 		bIsInitializationSuccessful = BleMidiMethodCallUtils::CallBoolMethod(JavaManager, "initialize",
-		"(Landroid/app/Activity;J)Z", (jlong) NativeCallback, FJavaWrapper::GameActivityThis);
+		"(Landroid/app/Activity;J)Z", FJavaWrapper::GameActivityThis, (jlong) NativeCallback);
 #endif
 	return bIsInitializationSuccessful;
 }
